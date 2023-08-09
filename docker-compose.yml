@@ -1,0 +1,34 @@
+version: '3'
+services:
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - 6380:6379
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: redis
+      REDIS_HOST: redis
+      REDIS_PORT: redis:6379
+      REDIS_PASSWORD: upcharge
+      HTTP_USER: root
+      HTTP_PASSWORD: root
+    ports:
+      - 8082:8081
+  localstack:
+    image: localstack/localstack
+    environment:
+      - AWS_DEFAULT_REGION=ap-southeast-1
+      - EDGE_PORT=4566
+      - SERVICES=secretsmanager, cloudformation, s3, lambda
+    ports:
+      - '4566:4566'
+    volumes:
+      - localstack:/tmp/localstack
+      - '.:/lambda'
+      - './setup-localstack.sh:/docker-entrypoint-initaws.d/setup-localstack.sh'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+volumes:
+  localstack:
