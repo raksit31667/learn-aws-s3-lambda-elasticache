@@ -28,6 +28,5 @@ custom:
       - local
     host: http://localhost
     edgePort: 4566
-    autostart: true
     endpoints:
       S3: http://localhost:4572
